@@ -16,3 +16,10 @@ services:
       timeout: "10s"
     ports:
       - "3306:3306"
+    volumes:
+      - type: bind
+        source: "./mysql/docker-entrypoint-initdb.d"
+        target: "/docker-entrypoint-initdb.d"
+      - type: bind
+        source: "./mysql/var/lib/mysql-files"
+        target: "/var/lib/mysql-files"
