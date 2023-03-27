@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  odp-mysql:
+    container_name: odp-mysql
+    hostname: odp-mysql
+    image: mysql:8.0
+    restart: always
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      - MYSQL_PASSWORD=mysql
+      - MYSQL_USER=mysql
+    healthcheck:
+      test: "mysqladmin ping"
+      interval: "10s"
+      timeout: "10s"
+    ports:
+      - "3306:3306"
+    volumes:
+      - type: bind
+        source: "./mysql/docker-entrypoint-initdb.d"
+        target: "/docker-entrypoint-initdb.d"
+      - type: bind
+        source: "./mysql/var/lib/mysql-files"
+        target: "/var/lib/mysql-files"
