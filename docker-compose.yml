@@ -43,3 +43,15 @@ services:
       - type: bind
         source: "./postgres/docker-entrypoint-initdb.d"
         target: "/docker-entrypoint-initdb.d"
+
+  odp-java:
+    container_name: odp-java
+    build:
+      context: java
+      dockerfile: Dockerfile
+    hostname: odp-java
+    image: odp-java
+    healthcheck:
+      test: "embulk --version"
+      interval: "10s"
+      timeout: "10s"
