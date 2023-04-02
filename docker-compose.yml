@@ -55,3 +55,14 @@ services:
       test: "embulk --version"
       interval: "10s"
       timeout: "10s"
+    volumes:
+      - type: bind
+        source: "../oss-data-platform-embulk"
+        target: "/var/apps/embulk"
+    command: |
+      bash -c "
+        cd /var/apps/embulk/bundle
+        embulk bundle
+        /usr/sbin/sshd -D
+      "
+
