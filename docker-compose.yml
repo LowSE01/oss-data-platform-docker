@@ -66,3 +66,43 @@ services:
         /usr/sbin/sshd -D
       "
 
+  odp-airflow:
+    platform: linux/amd64
+    container_name: odp-airflow
+    build:
+      context: airflow
+      dockerfile: Dockerfile
+    hostname: odp-airflow
+    image: odp-airflow
+    environment:
+      - AIRFLOW_HOME=/opt/airflow
+      - AIRFLOW__CLI__ENDPOINT_URL=http://localhost:8080
+      - AIRFLOW__CORE__DAGS_FOLDER=/var/apps/airflow/dags
+      - AIRFLOW__CORE__DEFAULT_TIMEZONE=Asia/Tokyo
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__CORE__LOAD_DEFAULT_CONNECTIONS=False
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__CORE__PLUGINS_FOLDER=/var/apps/airflow/plugins
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=mysql://mysql:mysql@odp-mysql:3306/airflow
+      - AIRFLOW__LOGGING_BASE_LOG_FOLDER=/var/apps/airflow/logs
+      - AIRFLOW__SCHEDULER__CATCHUP_BY_DEFAULT=False
+      - AIRFLOW__SCHEDULER__DAG_DIR_LIST_INTERVAL=10
+      - AIRFLOW__WEBSERVER__BASE_URL=http://localhost:8080
+      - AIRFLOW__WEBSERVER__DEFAULT_UI_TIMEZONE=Asia/Tokyo
+      - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=True
+      - AIRFLOW__WEBSERVER__RELOAD_ON_PLUGIN_CHANGE=True
+      - AIRFLOW__WEBSERVER__WARN_DEPLOYMENT_EXPOSURE=False
+      - AIRFLOW__WEBSERVER__WEB_SERVER_PORT:8080
+    healthcheck:
+      test: "curl -f http://localhost:8080/health"
+      interval: "10s"
+      timeout: "10s"
+    depends_on:
+      odp-mysql:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    volumes:
+      - type: bind
+        source: "../oss-data-platform-airflow"
+        target: "/var/apps/airflow"

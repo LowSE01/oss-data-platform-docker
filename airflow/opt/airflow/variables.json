@@ -1,0 +1,6 @@
+{
+  "daily_dag_concurrency": "2",
+  "daily_dag_default_args_retries": "1",
+  "daily_dag_schedule_interval": "0 4 * * *",
+  "daily_memory_allocation_pool_size": "1g"
+}
