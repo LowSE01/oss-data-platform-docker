@@ -24,3 +24,22 @@ services:
       - type: bind
         source: "./mysql/var/lib/mysql-files"
         target: "/var/lib/mysql-files"
+
+  odp-postgres:
+    container_name: odp-postgres
+    hostname: odp-postgres
+    image: postgres:15.2
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+    healthcheck:
+      test: "pg_isready -U \"${POSTGRES_USER:-postgres}\" || exit 1"
+      interval: "10s"
+      timeout: "10s"
+    ports:
+      - "5432:5432"
+    volumes:
+      - type: bind
+        source: "./postgres/docker-entrypoint-initdb.d"
+        target: "/docker-entrypoint-initdb.d"
