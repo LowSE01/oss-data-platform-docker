@@ -123,8 +123,11 @@ services:
       - "8888:8080"
     volumes:
       - type: bind
-        source: "../oss-data-platform-dbt"
-        target: "/var/apps/dbt"
+        source: "../oss-data-platform-dbt-datawarehouse"
+        target: "/var/apps/dbt/datawarehouse"
+      - type: bind
+        source: "../oss-data-platform-dbt-datamart"
+        target: "/var/apps/dbt/datamart"
     command: |
       bash -c "
         /usr/sbin/sshd
