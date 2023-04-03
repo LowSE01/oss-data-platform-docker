@@ -116,11 +116,11 @@ services:
     hostname: odp-python3
     image: odp-python3
     healthcheck:
-      test: "curl -f http://localhost:8080"
+      test: "curl -f http://localhost:8081 && curl -f http://localhost:8082"
       interval: "10s"
       timeout: "10s"
     ports:
-      - "8888:8080"
+      - "8081-8082:8081-8082"
     volumes:
       - type: bind
         source: "../oss-data-platform-dbt-datawarehouse"
@@ -130,8 +130,9 @@ services:
         target: "/var/apps/dbt/datamart"
     command: |
       bash -c "
-        /usr/sbin/sshd
-        cd /var/apps/dbt
-        dbt docs generate --profiles-dir ./profiles
-        dbt docs serve    --profiles-dir ./profiles
+        cd /var/apps/dbt/datawarehouse
+        dbt docs generate && dbt docs serve --port 8081 &
+        cd /var/apps/dbt/datamart
+        dbt docs generate && dbt docs serve --port 8082 &
+        /usr/sbin/sshd -D
       "
