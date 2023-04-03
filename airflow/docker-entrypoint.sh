@@ -19,6 +19,12 @@ if [ "$(airflow variables get ${IS_DATABASE_INITIALIZED})" != "true" ]; then
             --conn-login "java" \
             --conn-password "java" \
             --conn-port 22
+  airflow connections add odp_python3_ssh \
+            --conn-type "ssh" \
+            --conn-host "odp-python3" \
+            --conn-login "python3" \
+            --conn-password "python3" \
+            --conn-port 22
 
   airflow variables set ${IS_DATABASE_INITIALIZED} true
 fi

@@ -106,3 +106,20 @@ services:
       - type: bind
         source: "../oss-data-platform-airflow"
         target: "/var/apps/airflow"
+
+  odp-python3:
+    platform: linux/amd64
+    container_name: odp-python3
+    build:
+      context: python3
+      dockerfile: Dockerfile
+    hostname: odp-python3
+    image: odp-python3
+    healthcheck:
+      test: "which python3"
+      interval: "10s"
+      timeout: "10s"
+    volumes:
+      - type: bind
+        source: "../oss-data-platform-dbt"
+        target: "/var/apps/dbt"
