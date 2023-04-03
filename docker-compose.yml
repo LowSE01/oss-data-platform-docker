@@ -116,10 +116,19 @@ services:
     hostname: odp-python3
     image: odp-python3
     healthcheck:
-      test: "which python3"
+      test: "curl -f http://localhost:8080"
       interval: "10s"
       timeout: "10s"
+    ports:
+      - "8888:8080"
     volumes:
       - type: bind
         source: "../oss-data-platform-dbt"
         target: "/var/apps/dbt"
+    command: |
+      bash -c "
+        /usr/sbin/sshd
+        cd /var/apps/dbt
+        dbt docs generate --profiles-dir ./profiles
+        dbt docs serve    --profiles-dir ./profiles
+      "
